@@ -34,7 +34,10 @@ const getGlob = (dir, opts) => {
 };
 
 module.exports = (input, opts) => {
-	opts = Object.assign({cwd: process.cwd()}, opts);
+	opts = opts || {};
+	if (!opts.cwd) {
+		opts.cwd = process.cwd();
+	}
 
 	return Promise.all([].concat(input).map(x => pathType.dir(getPath(x, opts.cwd))
 		.then(isDir => isDir ? getGlob(x, opts) : x)))
@@ -42,7 +45,10 @@ module.exports = (input, opts) => {
 };
 
 module.exports.sync = (input, opts) => {
-	opts = Object.assign({cwd: process.cwd()}, opts);
+	opts = opts || {};
+	if (!opts.cwd) {
+		opts.cwd = process.cwd();
+	}
 
 	const globs = [].concat(input).map(x => pathType.dirSync(getPath(x, opts.cwd)) ? getGlob(x, opts) : x);
 	return [].concat.apply([], globs);
